@@ -1,0 +1,182 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor.RichTextEditor
+@using Syncfusion.Blazor.DropDowns
+
+<SfRichTextEditor ID="mentionFormatIntegration" @ref="rteObject" Placeholder="Type '/' and choose format">
+    <RichTextEditorToolbarSettings Enable="false"></RichTextEditorToolbarSettings>
+</SfRichTextEditor>
+
+<SfMention TItem="FormatData" DataSource="@EmailData" ValueSelecting="OnValueSelectingHandler"
+           Target="#mentionFormatIntegration" Opening="OnOpeningHandler" Filtering="OnFilteringHandler"
+           MentionChar="@FormatCharacter" AllowSpaces="true" PopupHeight="290px" PopupWidth="330px">
+    <ItemTemplate>
+        <table class="format-table">
+            <tr>
+                <td>
+                    <span class="@((context as FormatData).Icon)" id="icons"></span>
+                </td>
+                <td>
+                    <span class="font">@((context as FormatData).FormatName)</span>
+                    <span class="description">@((context as FormatData).Description)</span>
+                </td>
+            </tr>
+        </table>
+    </ItemTemplate>
+    <ChildContent>
+        <MentionFieldSettings Text="FormatName" GroupBy="FormatType"></MentionFieldSettings>
+    </ChildContent>
+</SfMention>
+
+@code {
+
+    SfRichTextEditor? rteObject;
+
+    private char FormatCharacter { get; set; } = '/';
+
+    List<FormatData> EmailData = new List<FormatData>
+    {
+        new FormatData{ FormatName= "Text", Command= "P", FormatType= "Basic blocks", Icon= "e-btn-icon e-text e-icons",
+        Description= "Writing with paragraphs"},
+        new FormatData{ FormatName= "Quotation", Command= "BlockQuote", FormatType= "Basic blocks",
+        Icon= "e-icons block-view", Description= "Insert a quote or citation"},
+        new FormatData { FormatName= "Heading 1", Command= "H1", FormatType= "Basic blocks",
+        Icon= "e-icons h1-view", Description= "Use this for a top level heading" },
+        new FormatData { FormatName= "Heading 2", Command= "H2", FormatType= "Basic blocks",
+        Icon= "e-icons h2-view", Description= "Use this for key sections" },
+        new FormatData { FormatName= "Heading 3", Command= "H3", FormatType= "Basic blocks",
+        Icon= "e-icons h3-view", Description= "Use this for sub sections and group headings" },
+        new FormatData { FormatName= "Heading 4", Command= "H4", FormatType= "Basic blocks", Icon= "e-icons h4-view",
+        Description= "Use this for deep headings" },
+        new FormatData { FormatName= "Numbered list", Command= "OL", FormatType= "Basic blocks",
+        Icon= "e-icons e-list-ordered icon", Description= "Create an ordered list" },
+        new FormatData { FormatName= "Bulleted list", Command= "UL", FormatType= "Basic blocks",
+        Icon= "e-icons e-list-unordered icon", Description= "Create an unordered list" },
+        new FormatData { FormatName= "Table", Command= "CreateTable", FormatType= "Basic blocks",
+        Icon= "e-icons e-table icon", Description= "Insert a table" },
+        new FormatData { FormatName= "Image", Command= "Image", FormatType= "Media", Icon= "e-icons e-image icon",
+        Description= "Add image to your page" },
+        new FormatData { FormatName= "Audio", Command= "Audio", FormatType= "Media", Icon= "e-icons e-audio icon",
+        Description= "Add audio to your page" },
+        new FormatData { FormatName= "Video", Command= "Video", FormatType= "Media", Icon= "e-icons e-video icon",
+        Description= "Add video to your page"}
+    };
+
+    private async Task OnValueSelectingHandler(MentionValueSelectingEventArgs<FormatData> args)
+    {
+        if (rteObject != null)
+        {
+            args.Cancel = true;
+            await this.rteObject.FocusAsync();
+            await this.rteObject.RestoreSelectionAsync();
+            if (args.ItemData.Command == "OL")
+            {
+                await this.rteObject.ExecuteCommandAsync(CommandName.InsertOrderedList);
+            }
+            else if (args.ItemData.Command == "UL")
+            {
+                await this.rteObject.ExecuteCommandAsync(CommandName.InsertUnorderedList);
+            }
+            else if (args.ItemData.Command == "CreateTable")
+            {
+                await this.rteObject.ShowDialogAsync(DialogType.InsertTable);
+            }
+            else if (args.ItemData.Command == "Image")
+            {
+                await this.rteObject.ShowDialogAsync(DialogType.InsertImage);
+            }
+            else if (args.ItemData.Command == "Audio")
+            {
+                await this.rteObject.ShowDialogAsync(DialogType.InsertAudio);
+            }
+            else if (args.ItemData.Command == "Video")
+            {
+                await this.rteObject.ShowDialogAsync(DialogType.InsertVideo);
+            }
+            else
+            {
+                await this.rteObject.ExecuteCommandAsync(CommandName.FormatBlock, args.ItemData.Command);
+            }
+        }
+    }
+
+    public async Task OnOpeningHandler(MentionOpeningEventArgs args)
+    {
+        if (rteObject != null)
+        {
+            await this.rteObject.SaveSelectionAsync();
+        }
+    }
+
+    public async Task OnFilteringHandler(MentionFilteringEventArgs<FormatData> args)
+    {
+        if (rteObject != null)
+        {
+            await this.rteObject.SaveSelectionAsync();
+        }
+    }
+
+    public class FormatData
+    {
+        public string? FormatName { get; set; }
+        public string? Command { get; set; }
+        public string? FormatType { get; set; }
+        public string? Icon { get; set; }
+        public string? Description { get; set; }
+    }
+
+}
+
+<style>
+    .e-icons.block-view:before {
+        content: open-quote;
+        font-size: 30px;
+        line-height: 20px;
+    }
+
+    .e-icons.e-text:before {
+        content: 'T';
+    }
+
+    .e-icons.h1-view:before {
+        content: 'H1';
+    }
+
+    .e-icons.h2-view:before {
+        content: 'H2';
+    }
+
+    .e-icons.h3-view:before {
+        content: 'H3';
+    }
+
+    .e-icons.h4-view:before {
+        content: 'H4';
+    }
+
+    .e-richtexteditor.e-rte-full-screen {
+        top: 48px;
+    }
+
+    .format-table .description {
+        display: block;
+        line-height: 20px;
+        font-size: 12px;
+        padding: 1px 0px 5px 0px;
+    }
+
+    .format-table .font {
+        font-size: 16px;
+        display: block;
+        line-height: 20px;
+        padding: 5px 0px 1px 0px;
+    }
+
+    .format-table #icons {
+        padding: 15px 15px;
+        display: inline-block;
+        width: 55px;
+        font-size: 20px;
+        line-height: 0px;
+    }
+</style>
