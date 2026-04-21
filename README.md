@@ -1,14 +1,34 @@
-# Blazor-RTE-Smart-Suggestion
-A quick-start project that helps you how to utilize Smart Suggestion in Blazor Scheduler Component. 
+# Blazor Rich Text Editor  — Smart Suggestion
+
+A minimal Blazor sample demonstrating the Smart Suggestion feature in the Syncfusion Rich Text Editor component. The sample shows how to enable and configure Smart Suggestion to assist users while composing content.
+
+## Overview
+
+This project provides a working example of integrating the RTE Smart Suggestion capability into a Blazor application. Use it as a reference for enabling suggestions, configuring suggestion sources, and handling suggestion events.
 
 Online examples: https://blazor.syncfusion.com/demos/rich-text-editor/smart-suggestion?theme=fluent
 
-# Project prerequisites
-Make sure that you have the latest versions of 'Visual Studio 2022' in your machine before starting to work on this project.
+## Prerequisites
 
-# How to run this application?
-• To run this application, you need to first clone the <code>Blazor-RTE-Smart-Suggestion</code> repository and then open it in Visual Studio 2022.
+- Visual Studio 2022 (or later)
+- The .NET SDK required by the solution
 
-• Register the syncfusion license key in the Program.cs file, if you have any doubts check the documentation link: https://blazor.syncfusion.com/documentation/getting-started/license-key/how-to-register-in-an-application
+## Run the application
 
-• Now, simply build and run your project to view the output.
+1. Clone the repository and open the solution in Visual Studio 2022.
+2. Register your Syncfusion license key in `Program.cs`. See:
+
+	https://blazor.syncfusion.com/documentation/getting-started/license-key/how-to-register-in-an-application
+
+3. Restore NuGet packages, build, and run the project from Visual Studio.
+
+Optional CLI:
+
+```powershell
+dotnet restore
+dotnet build
+```
+
+## Troubleshooting & support
+
+If you encounter issues, confirm that packages are restored, the project builds, and the license key is registered correctly. For more details about Syncfusion components consult the Syncfusion Blazor documentation.
